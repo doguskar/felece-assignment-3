@@ -1,0 +1,197 @@
+.clr-orange {
+  color: #fd7e14 !important;
+}
+.clr-primary {
+  color: #007bff !important;
+}
+.clr-danger {
+  color: #dc3545 !important;
+}
+.clr-purple {
+  color: #6f42c1 !important;
+}
+.clr-success {
+  color: #28a745 !important;
+}
+header {
+  box-shadow: rgba(0, 0, 0, 0.3) 0 0.3rem 0.3rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+header .container {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-align: center;
+      align-items: center;
+}
+header .container a {
+  text-decoration: none;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+  -ms-flex-align: end;
+      align-items: flex-end;
+}
+header .container a img {
+  max-height: 3rem;
+  margin-right: 0.5rem;
+}
+header .container a h2 {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  color: #888888;
+  font-size: 1.5rem;
+}
+h1 {
+  color: #007bff;
+  font-size: 1.7rem;
+}
+.todo-overlay {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+      flex-flow: row wrap;
+}
+.todo-overlay .filter-sec {
+  -ms-flex: 1;
+      flex: 1;
+  margin-right: 1rem;
+  padding-right: 1rem;
+  border-right: 1px solid #ccc;
+}
+.todo-overlay .todo-container {
+  -ms-flex: 4;
+      flex: 4;
+}
+@media only screen and (max-width: 991px) {
+  .filter-sec {
+    display: none;
+  }
+}
+.todo-input-container {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row nowrap;
+      flex-flow: row nowrap;
+  border-bottom: 1px solid #888888;
+  transition: 0.3s border-color;
+  padding: 0.6rem 0.6rem 0.6rem 2rem;
+  margin-bottom: 0.6rem;
+}
+.todo-input-container.active {
+  border-color: #6f42c1;
+}
+.todo-input-container input {
+  border: none;
+  outline: none;
+}
+.todo-input-container input:focus {
+  border: none;
+}
+.todo-input-container input[type="text"] {
+  -ms-flex: 1 auto;
+      flex: 1 auto;
+}
+.todo-input-container button {
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: #888888;
+}
+.todo-input-container::after {
+  position: absolute;
+  content: '\2795';
+  top: 0.6rem;
+  left: 0.5rem;
+}
+.todo-item {
+  border-bottom: 1px solid #ccc;
+  padding: 0.8rem 0.5rem 0.5rem 0.5rem;
+}
+.todo-item label {
+  cursor: pointer;
+  margin: 0;
+}
+.todo-item label input {
+  cursor: pointer;
+  float: left;
+  width: 1rem;
+  height: 1rem;
+  margin: 0.25rem 0;
+  margin-right: 0.5rem;
+}
+.todo-item label span {
+  float: left;
+}
+.todo-item button {
+  float: right;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: #888888;
+}
+.todo-item button.todo-item-todo {
+  color: #6f42c1;
+}
+.todo-item button.todo-item-delayed {
+  color: #fd7e14;
+}
+.todo-item button.todo-item-edit {
+  color: #28a745;
+}
+.todo-item.done span {
+  text-decoration: line-through;
+}
+.welcome-container {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row nowrap;
+      flex-flow: row nowrap;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+}
+.welcome-container img {
+  -ms-flex: 1;
+      flex: 1;
+  height: 458px;
+}
+.welcome-container div {
+  -ms-flex: 2;
+      flex: 2;
+  text-align: center;
+  margin-top: 5rem;
+}
+.welcome-container a {
+  display: inline-block;
+  font-size: 1.5rem;
+  background-color: #007bff;
+  padding: 0.8rem 3rem;
+  text-decoration: none;
+  color: #fff;
+}
+.welcome-container h2,
+.welcome-container h3 {
+  margin-bottom: 2rem;
+}
+@media only screen and (max-width: 767px) {
+  .welcome-container {
+    -ms-flex-flow: row wrap;
+        flex-flow: row wrap;
+  }
+  .welcome-container img {
+    -ms-flex: 1 100%;
+        flex: 1 100%;
+    height: 200px;
+    width: 286px;
+  }
+  .welcome-container div {
+    margin-top: 0rem;
+  }
+}

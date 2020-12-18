@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="lib/dk-popup/assets/animate/animate.min.css">
+    <link rel="stylesheet" href="lib/dk-popup/css/dk-popup.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+    <div class="container">
+        <a href="/">
+            <img src="images/kardo.png" alt="">
+            <h2>TODO</h2>
+        </a>
+        <form th:action="@{/logout}" method="post" style="display: inline-block">
+            <input type="submit" value="Sign Out" class="btn btn-primary"/>
+        </form>
+    </div>
+</header>
+<div class="container-fluid">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pills-todos-tab" data-toggle="pill" href="#pills-todos" role="tab" aria-controls="pills-todos" aria-selected="true">TODOS</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link " id="pills-users-tab" data-toggle="pill" href="#pills-users" role="tab" aria-controls="pills-users" aria-selected="true">USERS</a>
+        </li>
+    </ul>
+    <hr>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade" id="pills-users" role="tabpanel" aria-labelledby="pills-users-tab">
+            <div class="row">
+                <div class="col-12">
+                    <button type="button" class="btn btn-success" onclick="addUserPopup()">Add User</button>
+                </div>
+            </div>
+            <br>
+            <table class="table" id="userTable">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Password</th>
+                    <th scope="col">Role</th>
+                    <th scope="col">Remove</th>
+                    <th scope="col">Update</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade show active" id="pills-todos" role="tabpanel" aria-labelledby="pills-all-todos">
+            <div class="row">
+                <div class="col-12">
+                    <Label>Başlangıç Tarihi
+                        <input type="date" id="startDate" class="form-control"></Label>
+                    <Label>Bitiş Tarihi
+                        <input type="date" id="endDate" class="form-control"></Label>
+                    <button class="btn btn-info" id="filterBtn">Ara</button>
+                </div>
+            </div>
+            <br>
+            <table class="table" id="todosTable">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Created Date</th>
+                    <th scope="col">User Id</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="lib/jquery/dist/jquery.min.js"></script>
+<script src="lib/bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+<script src="lib/dk-popup/js/dk-popup.js"></script>
+<script src="js/script.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>
