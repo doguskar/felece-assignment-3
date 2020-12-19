@@ -1,5 +1,6 @@
 package com.doguskar.todo.service;
 
+import com.doguskar.todo.dto.SignUpResponseDto;
 import com.doguskar.todo.dto.UserDto;
 import com.doguskar.todo.auth.AppUserRole;
 import com.doguskar.todo.entity.User;
@@ -51,6 +52,9 @@ public class UserService implements UserDetailsService {
                 user.getAppUserRole().name()
         );
     }
+    public Optional<User> findByUsername(String username){
+        return repository.findByUsername(username);
+    }
     public UserDto save(UserDto dto){
         if (dto.getUsername() == null && dto.getPassword() == null){
             return null;
@@ -75,6 +79,37 @@ public class UserService implements UserDetailsService {
                 createdUser.getPassword(),
                 createdUser.getAppUserRole().name()
         );
+    }
+    public SignUpResponseDto register(UserDto dto){
+        /*Validations*/
+        SignUpResponseDto responseDto = new SignUpResponseDto();
+        String username = dto.getUsername();
+        String password = dto.getPassword();
+        if (username == null || username.length() < 3){
+            responseDto.setNotUsernameValid(true);
+            return responseDto;
+        }
+        if (password == null || password.length() < 6){
+            responseDto.setNotPasswordValid(true);
+            return responseDto;
+        }
+        Optional<User> user = repository.findByUsername(username);
+        if(user.isPresent()){
+            responseDto.setUsernameUsed(true);
+            return responseDto;
+        }
+        /*Save User*/
+        User registeredUser = repository.save(new User(
+                dto.getUsername(),
+                passwordEncoder.encode(dto.getPassword()),
+                AppUserRole.USER,
+                true,true,true,true
+        ));
+        if (registeredUser != null){
+            responseDto.setResult(true);
+            return responseDto;
+        }
+        return responseDto;
     }
     public UserDto update(UserDto dto){
         if (dto.getId() == null){

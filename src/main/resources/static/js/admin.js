@@ -95,7 +95,7 @@ function addUserPopup() {
 function submitAddUserForm() {
     $.ajax({
         type: "POST",
-        url: "/members/signup",
+        url: "/admin/Users",
         headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
         contentType: "application/json",
         data: JSON.stringify({

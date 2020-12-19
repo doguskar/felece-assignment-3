@@ -3,27 +3,36 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Please sign in</title>
+    <title>Giriş Yap</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap.min.css">
-    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous">
     <link rel="stylesheet" href="lib/dk-popup/assets/animate/animate.min.css">
     <link rel="stylesheet" href="lib/dk-popup/css/dk-popup.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="lib/cssload/lds_ripple.css">
 </head>
-<body>
+<body style="background-color: #f0f0f0">
 <div class="container">
     <form class="form-signin" method="post" th:action="@{/login}">
-        <h2 class="form-signin-heading">Please sign in</h2>
+        <h2 class="form-signin-heading">Lütfen Giriş Yapın</h2>
+        <div th:if="${param.error}" class="alert alert-danger">
+            Geçersiz kullanıcı adı veya şifre!
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success">
+            Oturumunuzu kapattınız!
+        </div>
         <p>
-            <label for="username" class="sr-only">Username</label>
+            <label for="username" class="sr-only">Kullanıcı Adı</label>
             <input type="text" id="username" name="username" class="form-control" placeholder="Username" required="" autofocus="">
         </p>
         <p>
-            <label for="password" class="sr-only">Password</label>
+            <label for="password" class="sr-only">Parola</label>
             <input type="password" id="password" name="password" class="form-control" placeholder="Password" required="">
         </p>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        <button type="button" class="btn btn-lg btn-primary btn-block mt-3" onclick="signUpPopup()">Sign up</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Giriş Yap</button>
+        <h3 class="mt-3">Bir hesabınız yok mu?</h3>
+        <button type="button" class="btn btn-lg btn-info btn-block mt-3" onclick="signUpPopup()">Kayıt Ol</button>
     </form>
 </div>
 <script src="lib/jquery/dist/jquery.min.js"></script>

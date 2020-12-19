@@ -50,4 +50,9 @@ public class AdminController {
     public void DeleteUsers(@PathVariable Long id){
         userService.delete(id);
     }
+    @RequestMapping(path = "/Users", method = RequestMethod.POST)
+    @ResponseBody
+    public UserDto saveUser(@RequestBody UserDto dto){
+        return userService.save(dto);
+    }
 }
