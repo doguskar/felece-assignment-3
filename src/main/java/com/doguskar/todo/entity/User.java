@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
+@Table(name = "app_user")//, schema = "todo"
 public class User implements UserDetails{
     @Id
     @GeneratedValue

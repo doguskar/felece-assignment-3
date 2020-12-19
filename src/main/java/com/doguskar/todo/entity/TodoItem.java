@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "todo_item")//, schema = "todo"
 public class TodoItem {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
