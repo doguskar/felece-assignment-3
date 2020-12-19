@@ -4,25 +4,31 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Title</title>
+    <title>TODO</title>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap-reboot.min.css">
     <link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
 	<link rel="stylesheet" href="lib/dk-popup/assets/animate/animate.min.css">
 	<link rel="stylesheet" href="lib/dk-popup/css/dk-popup.css">
 	<link rel="stylesheet" href="lib/cssload/lds_ripple.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="dark-theme">
     <header>
 		<div class="container">
 			<a href="/">
 				<img src="images/kardo.png" alt="">
 				<h2>TODO</h2>
 			</a>
-			<span style="display: flex; flex-flow: row nowrap">
+			<span style="display: flex; flex-flow: row nowrap; align-items: center">
+				<label class="dk-cbox mr-3 mb-0">
+					<input type="checkbox" id="darkModeCheck" checked/>
+					<span class="dk-cbox">
+						<span></span>
+					</span>
+					<span class="text">Gece Modu</span>
+				</label>
 				<a href="/admin" class="btn btn-primary mr-1" sec:authorize="hasRole('ROLE_ADMIN')">Admin Panel</a>
 				<form th:action="@{/logout}" method="post" style="display: inline-block">
 					<input type="submit" value="Sign Out" class="btn btn-primary"/>
@@ -50,13 +56,13 @@
 						<input type="time" id="todoTime" value="00:00">
 						<button type="button" id="addTodo">EKLE</button>
 					</div>
-					<div id="todoContainer"></div>
+					<div id="todoContainer"><div class="cover-content"><div class="out-of-middle"><div class="middle"><div style="text-align:center"><div class="lds-ripple"><div></div><div></div></div></div></div></div></div></div>
 					<br/>
 					<h1 class="clr-orange">ERTELENDİ</h1>
-					<div id="delayedContainer"></div>
+					<div id="delayedContainer"><div class="cover-content"><div class="out-of-middle"><div class="middle"><div style="text-align:center"><div class="lds-ripple"><div></div><div></div></div></div></div></div></div></div>
 					<br/>
 					<h1>YAPILDI</h1>
-					<div id="doneContainer"></div>
+					<div id="doneContainer"><div class="cover-content"><div class="out-of-middle"><div class="middle"><div style="text-align:center"><div class="lds-ripple"><div></div><div></div></div></div></div></div></div></div>
 				</div>
 			</div>
 		</div>
@@ -64,6 +70,7 @@
 
     <script src="lib/jquery/dist/jquery.min.js"></script>
 	<script src="lib/dk-popup/js/dk-popup.js"></script>
+    <script src="js/main.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>

@@ -4,19 +4,38 @@
 .clr-primary {
   color: #007bff !important;
 }
-.clr-danger {
-  color: #dc3545 !important;
-}
 .clr-purple {
   color: #6f42c1 !important;
 }
 .clr-success {
   color: #28a745 !important;
 }
+body {
+  background-color: #f0f0f0;
+}
+.main > .container,
+.admin-container {
+  background-color: #fff;
+  padding: 1.5rem;
+  margin-top: 4.5rem;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 0 0.3rem;
+}
+.admin-container {
+  max-height: 2000px;
+}
+body > .container {
+  margin-top: 4.5rem;
+  padding-top: 1.5rem;
+}
 header {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.3) 0 0.3rem 0.3rem;
   padding: 1rem;
-  margin-bottom: 1.5rem;
+  z-index: 1;
 }
 header .container {
   display: -ms-flexbox;
@@ -112,26 +131,34 @@ h1 {
   left: 0.5rem;
 }
 .todo-item {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row nowrap;
+      flex-flow: row nowrap;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-align: center;
+      align-items: center;
   border-bottom: 1px solid #ccc;
   padding: 0.8rem 0.5rem 0.5rem 0.5rem;
 }
 .todo-item label {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row nowrap;
+      flex-flow: row nowrap;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-align: center;
+      align-items: center;
   cursor: pointer;
   margin: 0;
 }
 .todo-item label input {
   cursor: pointer;
-  float: left;
-  width: 1rem;
-  height: 1rem;
-  margin: 0.25rem 0;
   margin-right: 0.5rem;
 }
-.todo-item label span {
-  float: left;
-}
 .todo-item button {
-  float: right;
   border: none;
   outline: none;
   background-color: transparent;
@@ -155,13 +182,14 @@ h1 {
   -ms-flex-flow: row nowrap;
       flex-flow: row nowrap;
   -ms-flex-pack: justify;
-      justify-content: space-around;
+      justify-content: space-between;
 }
 .welcome-container img {
   -ms-flex: 1;
       flex: 1;
   max-height: 500px;
-  object-fit: contain;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .welcome-container div {
   -ms-flex: 2;
@@ -181,9 +209,6 @@ h1 {
 .welcome-container h3 {
   margin-bottom: 2rem;
 }
-.welcome-container h3 {
-   font-weight: normal;
- }
 @media only screen and (max-width: 767px) {
   .welcome-container {
     -ms-flex-flow: row wrap;
@@ -192,22 +217,23 @@ h1 {
   .welcome-container img {
     -ms-flex: 1 100%;
         flex: 1 100%;
-    max-height: 200px;
+    height: 200px;
+    width: 286px;
   }
   .welcome-container div {
     margin-top: 0rem;
   }
 }
-.out-of-middle{
-  display:table;
-  width:100%;
-  height:100%;
+.out-of-middle {
+  display: table;
+  width: 100%;
+  height: 100%;
 }
-.middle{
-  display:table-cell;
-  vertical-align:middle;
+.middle {
+  display: table-cell;
+  vertical-align: middle;
 }
-.cover-content{
+.cover-content {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -216,17 +242,101 @@ h1 {
   z-index: 1;
   background-color: #fff;
 }
-
-.form-signin{
+.login-body {
+  background-color: #f0f0f0;
+}
+.login-body .form-signin {
   padding: 2rem;
   max-width: 25rem;
-  margin: 3rem auto;
+  margin: 1rem auto;
   border: 1px solid #fff;
   border-radius: 1rem;
   box-shadow: rgba(0, 0, 0, 0.3) 0 0 0.5rem;
   text-align: center;
   background-color: #fff;
 }
-.form-signin h2, .form-signin h3{
-  color: #0e639c;
+.login-body .form-signin h2,
+.login-body .form-signin h3 {
+  color: #007bff;
 }
+/*Dark theme*/
+body.dark-theme {
+  background-color: #333333;
+  color: #f0f0f0;
+}
+body.dark-theme header {
+  background-color: #222222;
+}
+body.dark-theme .main > .container,
+body.dark-theme .admin-container {
+  background-color: #222222;
+}
+body.dark-theme .filter-sec {
+  border-color: #333333;
+}
+body.dark-theme .todo-item {
+  border-color: #333333;
+}
+body.dark-theme .todo-input-container input {
+  background-color: #222222;
+  color: #f0f0f0;
+}
+body.dark-theme .table {
+  color: #f0f0f0;
+}
+body.dark-theme .table th,
+body.dark-theme .table td {
+  border-color: #555;
+}
+body.dark-theme .form-signin {
+  background-color: #222222;
+  border-color: #222222;
+}
+body.dark-theme .form-signin input {
+  color: #f0f0f0;
+  background-color: #222222;
+}
+/* checkbox */
+.dk-cbox {
+  cursor: pointer;
+  display: inline-block;
+}
+.dk-cbox input {
+  position: absolute;
+  left: -9999px;
+}
+.dk-cbox .dk-cbox {
+  display: inline-block;
+  width: 36px;
+  height: 14px;
+  background: #d0d0d0;
+  border-radius: 14px;
+  position: relative;
+  transition: 500ms background;
+}
+.dk-cbox .dk-cbox span {
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  background: #fff;
+  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.4);
+  border-radius: 100%;
+  top: -3px;
+  left: 0;
+  transition: 500ms left, background;
+}
+.dk-cbox input:checked + .dk-cbox {
+  background: #81cdf6;
+}
+.dk-cbox input:checked + .dk-cbox span {
+  background: #337ab7;
+  left: 16px;
+}
+.dk-cbox .text {
+  position: relative;
+  top: -3px;
+  font-size: 12px;
+  line-height: 14px;
+  padding-left: 10px;
+}
+/* checkbox end */

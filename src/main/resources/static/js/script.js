@@ -51,13 +51,25 @@ function printTodos(todos) {
         else if (todo.status == 'DONE')
             doneBody += getTodoBody(todo)
     }
-
+    /*if(!todoBody){
+        todoBody = `<div class="text-center" ">Şuan yapılacak göreviniz yok.</div>`
+        $('#todoContainer').addClass("null-content")
+    }
+    if(!delayedBody){
+        delayedBody = `<div class="text-center" ">Şuan ertelenmiş göreviniz yok.</div>`
+        $('#delayedContainer').addClass("null-content")
+    }
+    if(!doneBody){
+        doneBody = `<div class="text-center" ">Şuan tamamlanımş göreviniz yok.</div>`
+        $('#doneContainer').addClass("null-content")
+    }*/
     $('#todoContainer').html(todoBody)
     $('#delayedContainer').html(delayedBody)
     $('#doneContainer').html(doneBody)
 
     $('.todo-item-edit').click((e)=>{
         editClickEvent(e)
+
     })
     $('.todo-item input').change((e)=>{
         changeClickEvent(e)
@@ -88,7 +100,7 @@ function refreshEvents(inputEl) {
 }
 /* TODO EDIT / DELETE */
 function editClickEvent(e){
-    var todoItemEl = $(e.target).parent()
+    var todoItemEl = $(e.target).parent().parent()
     var todoId = todoItemEl.find('input').first().attr('data-todo-id')
     console.log(todoId)
     $.ajax({
@@ -208,14 +220,16 @@ function getTodoBody(todo) {
 	body +=             `<span>${todo.description}</span>
                          <span> | </span>
                          <span class="todo-date">${getDateStr(todo.date)}</span>
-                    </label>`
+                    </label>
+                    <div>
+                    <button class="todo-item-edit">&#9998;</button>`
 
     if(todo.status == 'TODO')
         body +=     `<button class="todo-item-delayed">ERTELE</button>`
     else if(todo.status == 'DELAYED')
         body +=     `<button class="todo-item-todo">YAPILACAK</button>`
 
-    body +=         `<button class="todo-item-edit">&#9998;</button>
+    body +=         `</div>
                  </div>`
     return body;
 }
@@ -267,7 +281,7 @@ function changeClickEvent(e){
     })
 }
 function delayedClickEvent(e){
-    var todoId = $(e.target).parent().find('input').first().attr('data-todo-id')
+    var todoId = $(e.target).parent().parent().find('input').first().attr('data-todo-id')
     $.ajax({
         type: "PUT",
         url: "/TodoItems",
@@ -279,13 +293,13 @@ function delayedClickEvent(e){
         }),
         success: function (todo) {
             $('#delayedContainer').prepend(getTodoBody(todo))
-            $(e.target).parent().remove()
+            $(e.target).parent().parent().remove()
             refreshEvents($(`[data-todo-id=${todo.id}]`))
         }
     })
 }
 function todoClickEvent(e){
-    var todoId = $(e.target).parent().find('input').first().attr('data-todo-id')
+    var todoId = $(e.target).parent().parent().find('input').first().attr('data-todo-id')
     $.ajax({
         type: "PUT",
         url: "/TodoItems",
@@ -297,7 +311,7 @@ function todoClickEvent(e){
         }),
         success: function (todo) {
             $('#todoContainer').prepend(getTodoBody(todo))
-            $(e.target).parent().remove()
+            $(e.target).parent().parent().remove()
             refreshEvents($(`[data-todo-id=${todo.id}]`))
         }
     })
@@ -313,6 +327,13 @@ $('#filterBtn').click(()=>{
 /*FILTER END*/
 
 /* EXTRAS */
+$('#darkModeCheck').change((e)=>{
+    if ($('#darkModeCheck:checked').length > 0 ){
+        $('body').addClass('dark-theme')
+    }else{
+        $('body').removeClass('dark-theme')
+    }
+})
 function showLoading(e) {
     body = `<div class="cover-content" id="loadingScreen"><div class="out-of-middle"><div class="middle"><div style="text-align:center"><div class="lds-ripple"><div></div><div></div></div></div></div></div></div>`
     e.append(body)

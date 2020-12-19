@@ -12,10 +12,10 @@
     <link rel="stylesheet" href="lib/cssload/lds_ripple.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body style="background-color: #f0f0f0">
+<body class="login-body dark-theme">
 <div class="container">
     <form class="form-signin" method="post" th:action="@{/login}">
-        <h2 class="form-signin-heading">Lütfen Giriş Yapın</h2>
+        <h2 class="form-signin-heading mb-3">Lütfen Giriş Yapın</h2>
         <div th:if="${param.error}" class="alert alert-danger">
             Geçersiz kullanıcı adı veya şifre!
         </div>
@@ -37,5 +37,6 @@
 </div>
 <script src="lib/jquery/dist/jquery.min.js"></script>
 <script src="lib/dk-popup/js/dk-popup.js"></script>
+<script src="js/main.js"></script>
 <script src="js/login.js"></script>
 </body></html>

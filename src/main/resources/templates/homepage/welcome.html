@@ -8,13 +8,20 @@
     <link rel="stylesheet" href="lib/bootstrap-4.5.3-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
+<body class="dark-theme">
 <header>
     <div class="container">
         <a href="/">
             <img src="images/kardo.png" alt="">
             <h2>TODO</h2>
         </a>
+        <label class="dk-cbox mr-3 mb-0">
+            <input type="checkbox" id="darkModeCheck" checked/>
+            <span class="dk-cbox">
+						<span></span>
+					</span>
+            <span class="text">Gece Modu</span>
+        </label>
     </div>
 </header>
 <div class="container">
@@ -29,5 +36,7 @@
         <img src="images/welcome-right.png" alt="" class="d-none d-md-block">
     </div>
 </div>
+<script src="lib/jquery/dist/jquery.min.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
