@@ -10,7 +10,6 @@ function getUsers() {
         headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
         contentType: "application/json",
         success: function (users) {
-            console.log(users)
             var body = ''
             for(user of users){
                 body += getUserBody(user)
@@ -49,7 +48,6 @@ function getTodos() {
         headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
         contentType: "application/json",
         success: function (todos) {
-            console.log(todos)
             var body = ''
             for(todo of todos){
                 body += `<tr data-owner-user-id="${todo.user_id}">

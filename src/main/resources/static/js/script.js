@@ -40,89 +40,108 @@ function fetchTodoItems() {
     })
 }
 function printTodos(todos) {
+    var todoBody = "";
+    var delayedBody = "";
+    var doneBody = "";
     for(todo of todos){
         if (todo.status == 'TODO')
-            $('#todoContainer').append(getTodoBody(todo))
+            todoBody += getTodoBody(todo)
         else if (todo.status == 'DELAYED')
-            $('#delayedContainer').append(getTodoBody(todo))
+            delayedBody += getTodoBody(todo)
         else if (todo.status == 'DONE')
-            $('#doneContainer').append(getTodoBody(todo))
+            doneBody += getTodoBody(todo)
     }
-    changeClickEvent()
-    delayedClickEvent()
-    todoClickEvent()
-    editClickEvent()
+
+    $('#todoContainer').html(todoBody)
+    $('#delayedContainer').html(delayedBody)
+    $('#doneContainer').html(doneBody)
+
+    $('.todo-item-edit').click((e)=>{
+        editClickEvent(e)
+    })
+    $('.todo-item input').change((e)=>{
+        changeClickEvent(e)
+    })
+    $('.todo-item-delayed').click((e)=>{
+        delayedClickEvent(e)
+    })
+    $('.todo-item-todo').click((e)=>{
+        todoClickEvent(e)
+    })
 }
 /* GET TODOS END*/
 
-function refreshEvents() {
-    $('.todo-item input').off('change', changeClickEvent())
-    $('.todo-item-delayed').off('click', delayedClickEvent())
-    $('.todo-item-todo').off('click', todoClickEvent())
-    $('.todo-item-edit').off('click', editClickEvent())
-    todoClickEvent()
-    delayedClickEvent()
-    changeClickEvent()
-    editClickEvent()
+function refreshEvents(inputEl) {
+    var todoItemEl = inputEl.parent().parent()
+    todoItemEl.find('.todo-item-edit').click((e)=>{
+        editClickEvent(e)
+    })
+    todoItemEl.find('input').change((e)=>{
+        changeClickEvent(e)
+    })
+    todoItemEl.find('.todo-item-delayed').click((e)=>{
+        delayedClickEvent(e)
+    })
+    todoItemEl.find('.todo-item-todo').click((e)=>{
+        todoClickEvent(e)
+    })
 }
 /* TODO EDIT / DELETE */
-function editClickEvent(){
-    $('.todo-item-edit').click((e)=>{
-        var todoItemEl = $(e.target).parent()
-        var todoId = todoItemEl.find('input').first().attr('data-todo-id')
-        console.log(todoId)
-        $.ajax({
-            type: "GET",
-            url: "/TodoItems/"+todoId,
-            headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
-            contentType: "application/json",
-            success: function (todo) {
-                var dateSp = getDateStr(todo.date).split(' ')
-                var date = dateSp[0]
-                var time = dateSp[1]
-                var formBody = `<div class="container">
-                            <form id="editForm" method="post">
-                            <div class="form-group">
-                                <input type="hidden" id="todoIdEdit" class="form-control" value="${todo.id}">
-                                <button class="todo-item-remove btn btn-danger float-right" data-todo-id="${todo.id}" type="button">SİL</button>
-                                <br/><br/>
-                                <label for="todoDescriptionEdit">Description</label>
-                                <input type="text" id="todoDescriptionEdit" class="form-control" value="${todo.description}">
-                                <label for="todoDateEdit">Date</label>
-                                <input type="date" id="todoDateEdit" class="form-control" value="${date}">
-                                <label for="todoTimeEdit">Time</label>
-                                <input type="time" id="todoTimeEdit" class="form-control" value="${time}">
-                                <label for="todoTimeEdit">Status</label>
-                                <select id="todoStatusEdit" class="form-control" >`
-                    if(todo.status == 'TODO')
-                        formBody += `<option value="TODO" selected>TODO</option>`
-                    else
-                        formBody += `<option value="TODO">TODO</option>`
-                    if(todo.status == 'DELAYED')
-                        formBody += `<option value="DELAYED" selected>DELAYED</option>`
-                    else
-                        formBody += `<option value="DELAYED">DELAYED</option>`
-                    if(todo.status == 'DONE')
-                        formBody += `<option value="DONE" selected>DONE</option>`
-                    else
-                        formBody += `<option value="DONE">DONE</option>`
-                formBody +=    `</select>
-                            </div>
-                            </form>
-                        </div>`
-                dkPopupEditEl = dkPopup({
-                    title: 'DÜZENLE',
-                    type: 'confirm',
-                    confirmClick: function () {
-                        submitEditForm()
-                    },
-                    content: formBody,
-                    closeLabel: 'KAPAT',
-                    confirmLabel: 'KAYDET'
-                })
-                removeBtnEvent()
-            }
-        })
+function editClickEvent(e){
+    var todoItemEl = $(e.target).parent()
+    var todoId = todoItemEl.find('input').first().attr('data-todo-id')
+    console.log(todoId)
+    $.ajax({
+        type: "GET",
+        url: "/TodoItems/"+todoId,
+        headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
+        contentType: "application/json",
+        success: function (todo) {
+            var dateSp = getDateStr(todo.date).split(' ')
+            var date = dateSp[0]
+            var time = dateSp[1]
+            var formBody = `<div class="container">
+                        <form id="editForm" method="post">
+                        <div class="form-group">
+                            <input type="hidden" id="todoIdEdit" class="form-control" value="${todo.id}">
+                            <button class="todo-item-remove btn btn-danger float-right" data-todo-id="${todo.id}" type="button">SİL</button>
+                            <br/><br/>
+                            <label for="todoDescriptionEdit">Description</label>
+                            <input type="text" id="todoDescriptionEdit" class="form-control" value="${todo.description}">
+                            <label for="todoDateEdit">Date</label>
+                            <input type="date" id="todoDateEdit" class="form-control" value="${date}">
+                            <label for="todoTimeEdit">Time</label>
+                            <input type="time" id="todoTimeEdit" class="form-control" value="${time}">
+                            <label for="todoTimeEdit">Status</label>
+                            <select id="todoStatusEdit" class="form-control" >`
+                if(todo.status == 'TODO')
+                    formBody += `<option value="TODO" selected>TODO</option>`
+                else
+                    formBody += `<option value="TODO">TODO</option>`
+                if(todo.status == 'DELAYED')
+                    formBody += `<option value="DELAYED" selected>DELAYED</option>`
+                else
+                    formBody += `<option value="DELAYED">DELAYED</option>`
+                if(todo.status == 'DONE')
+                    formBody += `<option value="DONE" selected>DONE</option>`
+                else
+                    formBody += `<option value="DONE">DONE</option>`
+            formBody +=    `</select>
+                        </div>
+                        </form>
+                    </div>`
+            dkPopupEditEl = dkPopup({
+                title: 'DÜZENLE',
+                type: 'confirm',
+                confirmClick: function () {
+                    submitEditForm()
+                },
+                content: formBody,
+                closeLabel: 'KAPAT',
+                confirmLabel: 'KAYDET'
+            })
+            removeBtnEvent()
+        }
     })
 }
 function removeBtnEvent(){
@@ -141,6 +160,9 @@ function removeBtnEvent(){
     })
 }
 function submitEditForm() {
+    showLoading($(".dk-popup"))
+    var confirmBtn = $(".dk-popup a.pop-btn.primary")
+    confirmBtn.attr('disabled', 'disabled').addClass('disabled')
     $.ajax({
         type: "PUT",
         url: "/TodoItems",
@@ -161,7 +183,9 @@ function submitEditForm() {
                 $('#delayedContainer').prepend(getTodoBody(todo))
             else if (todo.status == 'DONE')
                 $('#doneContainer').prepend(getTodoBody(todo))
-            refreshEvents()
+            refreshEvents($(`[data-todo-id=${todo.id}]`))
+            removeLoading()
+            confirmBtn.removeAttr('disabled').removeClass('disabled')
             dkPopupEditEl.closeDkPop()
         },
         error: function () {
@@ -187,13 +211,12 @@ function getTodoBody(todo) {
                     </label>`
 
     if(todo.status == 'TODO')
-        body +=     `<button class="todo-item-delayed">ERTELE</button>
-                     <button class="todo-item-edit">DÜZENLE</button>`
+        body +=     `<button class="todo-item-delayed">ERTELE</button>`
     else if(todo.status == 'DELAYED')
-        body +=     `<button class="todo-item-todo">YAPILACAK</button>
-                     <button class="todo-item-edit">DÜZENLE</button>`
+        body +=     `<button class="todo-item-todo">YAPILACAK</button>`
 
-    body +=     `</div>`
+    body +=         `<button class="todo-item-edit">&#9998;</button>
+                 </div>`
     return body;
 }
 function addTodoItem(){
@@ -212,79 +235,71 @@ function addTodoItem(){
         success: function (todo) {
             $('#todoContainer').prepend(getTodoBody(todo))
             $('#todoInput').val("")
-            refreshEvents()
-        },
-        error: function () {
+            refreshEvents($(`[data-todo-id=${todo.id}]`))
         }
     })
 }
-function changeClickEvent(){
-    $('.todo-item input').change((e)=>{
-        var status = $(e.target).attr("data-status")
-        if(status == 'TODO' || status == 'DELAYED')
-            status = 'DONE'
-        else
-            status = 'TODO'
-        var todoId = $(e.target).attr("data-todo-id")
-        $.ajax({
-            type: "PUT",
-            url: "/TodoItems",
-            headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
-            contentType: "application/json",
-            data: JSON.stringify({
-                status: status,
-                id: todoId
-            }),
-            success: function (todo) {
-                if (todo.status == 'TODO')
-                    $('#todoContainer').prepend(getTodoBody(todo))
-                else if(todo.status == 'DONE')
-                    $('#doneContainer').prepend(getTodoBody(todo))
-
-                $(e.target).parent().parent().remove()
-                refreshEvents()
-            }
-        })
-    })
-}
-function delayedClickEvent(){
-    $('.todo-item-delayed').click((e)=>{
-        var todoId = $(e.target).parent().find('input').first().attr('data-todo-id')
-        $.ajax({
-            type: "PUT",
-            url: "/TodoItems",
-            headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
-            contentType: "application/json",
-            data: JSON.stringify({
-                status: 'DELAYED',
-                id: todoId
-            }),
-            success: function (todo) {
-                $('#delayedContainer').prepend(getTodoBody(todo))
-                $(e.target).parent().remove()
-                refreshEvents()
-            }
-        })
-    })
-}
-function todoClickEvent(){
-    $('.todo-item-todo').click((e)=>{
-        var todoId = $(e.target).parent().find('input').first().attr('data-todo-id')
-        $.ajax({
-            type: "PUT",
-            url: "/TodoItems",
-            headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
-            contentType: "application/json",
-            data: JSON.stringify({
-                status: 'TODO',
-                id: todoId
-            }),
-            success: function (todo) {
+function changeClickEvent(e){
+    var status = $(e.target).attr("data-status")
+    if(status == 'TODO' || status == 'DELAYED')
+        status = 'DONE'
+    else
+        status = 'TODO'
+    var todoId = $(e.target).attr("data-todo-id")
+    $.ajax({
+        type: "PUT",
+        url: "/TodoItems",
+        headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
+        contentType: "application/json",
+        data: JSON.stringify({
+            status: status,
+            id: todoId
+        }),
+        success: function (todo) {
+            if (todo.status == 'TODO')
                 $('#todoContainer').prepend(getTodoBody(todo))
-                $(e.target).parent().remove()
-                refreshEvents()
-            }
-        })
+            else if(todo.status == 'DONE')
+                $('#doneContainer').prepend(getTodoBody(todo))
+
+            $(e.target).parent().parent().remove()
+            refreshEvents($(`[data-todo-id=${todo.id}]`))
+        }
+    })
+}
+function delayedClickEvent(e){
+    var todoId = $(e.target).parent().find('input').first().attr('data-todo-id')
+    $.ajax({
+        type: "PUT",
+        url: "/TodoItems",
+        headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
+        contentType: "application/json",
+        data: JSON.stringify({
+            status: 'DELAYED',
+            id: todoId
+        }),
+        success: function (todo) {
+            $('#delayedContainer').prepend(getTodoBody(todo))
+            $(e.target).parent().remove()
+            refreshEvents($(`[data-todo-id=${todo.id}]`))
+        }
+    })
+}
+function todoClickEvent(e){
+    var todoId = $(e.target).parent().find('input').first().attr('data-todo-id')
+    $.ajax({
+        type: "PUT",
+        url: "/TodoItems",
+        headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
+        contentType: "application/json",
+        data: JSON.stringify({
+            status: 'TODO',
+            id: todoId
+        }),
+        success: function (todo) {
+            $('#todoContainer').prepend(getTodoBody(todo))
+            $(e.target).parent().remove()
+            refreshEvents($(`[data-todo-id=${todo.id}]`))
+        }
     })
 }
 

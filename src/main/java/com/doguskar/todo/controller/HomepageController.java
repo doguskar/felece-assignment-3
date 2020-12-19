@@ -28,7 +28,7 @@ public class HomepageController {
     }
     @RequestMapping(path = "welcome", method = RequestMethod.GET)
     public String openWelcome(){
-        return "welcome";
+        return "homepage/welcome";
     }
     @RequestMapping(path = "login", method = RequestMethod.GET)
     public String openLogin(){
@@ -36,7 +36,7 @@ public class HomepageController {
     }
     @RequestMapping(path = "todos", method = RequestMethod.GET)
     public String openTodos(){
-        return "index";
+        return "homepage/index";
     }
 
     @RequestMapping(value = "TodoItems", method = RequestMethod.GET)
