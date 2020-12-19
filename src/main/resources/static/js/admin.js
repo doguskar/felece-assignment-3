@@ -16,19 +16,24 @@ function getUsers() {
                 body += getUserBody(user)
             }
             $('#userTable tbody').html(body)
-            deleteUserEvent()
-            editUserEvent()
+
+            $('.user-remove').click((e)=>{
+                deleteUserEvent(e)
+            })
+            $('.user-edit').click((e)=>{
+                editUserEvent(e)
+            })
         }
     })
 }
 function getUserBody(user) {
 var body = `<tr>
                 <th scope="row">${user.id}</th>
-                <td>${user.username}</td>
+                <td class="user-username">${user.username}</td>
                 <td class="user-password">${user.password}</td>
                 <td class="user-role">${user.role}</td>
-                <td><a href="javascript:;" class="user-edit clr-success" data-user-id="${user.id}"">Düzenle</a></td>
-                <td><a href="javascript:;" class="user-remove clr-danger" data-user-id="${user.id}"  data-user-username="${user.username}">Kaldır</a></td>
+                <td><a href="javascript:;" class="user-edit clr-success" data-user-id="${user.id}">Düzenle</a></td>
+                <td><a href="javascript:;" class="user-remove clr-danger" data-user-id="${user.id}"  data-user-username="${user.username}">Sil</a></td>
             </tr>`
     return body;
 }
@@ -113,6 +118,8 @@ function submitAddUserForm() {
                 var user = response.user;
                 if(user){
                     $('#userTable tbody').append(getUserBody(user))
+                    $(`.user-edit[data-user-id = ${user.id}]`).click((e)=>{editUserEvent(e)})
+                    $(`.user-remove[data-user-id = ${user.id}]`).click((e)=>{deleteUserEvent(e)})
                     insertUserWarn("Kullanıcı başarıyla eklendi.", "success")
                     setTimeout(dkPopupElAddUser.closeDkPop, 2000)
                 }else{
@@ -142,24 +149,25 @@ function insertUserWarn(str, type) {
 }
 /* Add User END*/
 /* DELETE USER */
-function deleteUserEvent() {
-    $('.user-remove').click((e)=>{
-        var userId = $(e.target).attr("data-user-id")
-        var username = $(e.target).attr("data-user-username")
-        dkPopupElDeleteUser = dkPopup({
-            model: 'simple-confirm',
-            title: 'Kullanıcı Ekle',
-            type: 'confirm',
-            confirmClick: function () {
-                deleteUser(userId)
-            },
-            content: `@${username} kullanıcı adlı kullanıcıyı silmek istiyor musunuz?`,
-            closeLabel: 'KAPAT',
-            confirmLabel: 'ONAYLA'
-        })
+function deleteUserEvent(e) {
+    var userId = $(e.target).attr("data-user-id")
+    var username = $(e.target).attr("data-user-username")
+    dkPopupElDeleteUser = dkPopup({
+        model: 'simple-confirm',
+        title: 'Kullanıcı Ekle',
+        type: 'confirm',
+        confirmClick: function () {
+            deleteUser(userId)
+        },
+        content: `<strong>@${username}</strong> kullanıcı adlı kullanıcıyı silmek istiyor musunuz? Kullanıcının todo'larıda silinecektir.`,
+        closeLabel: 'KAPAT',
+        confirmLabel: 'ONAYLA'
     })
 }
 function deleteUser(userId) {
+    showLoading($(".dk-popup"))
+    var confirmBtn = $(".dk-popup a.pop-btn.primary")
+    confirmBtn.attr('disabled', 'disabled').addClass('disabled')
     $.ajax({
         type: "DELETE",
         url: "/admin/Users/"+userId,
@@ -168,63 +176,67 @@ function deleteUser(userId) {
         success: function () {
             $(`[data-user-id = "${userId}"]`).parent().parent().remove()
             $(`[data-owner-user-id = "${userId}"]`).remove()
+            removeLoading()
+            confirmBtn.removeAttr('disabled').removeClass('disabled')
             dkPopupElDeleteUser.closeDkPop()
         }
     })
 }
 /* DELETE USER END */
 /* EDIT USER*/
-function editUserEvent() {
-    $('.user-edit').click((e)=>{
-        var userId = $(e.target).attr("data-user-id")
-        $.ajax({
-            type: "GET",
-            url: "/admin/Users/"+userId,
-            headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
-            contentType: "application/json",
-            success: function (user) {
-                var formBody =`
-                <div class="container">
-                    <div class="form-group">
-                        <input type="hidden" id="editUserId" value="${user.id}">
-                        <label>Username
-                            <input type="text" class="form-control disabled" disabled value="${user.username}"/>
-                        </label>
-                        <label>Password
-                            <input type="text" class="form-control" id="editPassword"/>
-                        </label>
-                        <select id="editRole" class="form-control">`
-                    if(user.role == 'USER')
-                        formBody += `<option value="USER" selected>USER</option>`
-                    else
-                        formBody += `<option value="USER">USER</option>`
-                    if(user.role == 'ADMIN')
-                        formBody += `<option value="ADMIN" selected>ADMIN</option>`
-                    else
-                        formBody += `<option value="ADMIN">ADMIN</option>`
-                formBody +=`</select>
-                    </div>
-                <div>
-                `
-                dkPopupElEditUser = dkPopup({
-                    title: 'Kullanıcı Düzenle',
-                    type: 'confirm',
-                    confirmClick: function () {
-                        editUser(e)
-                    },
-                    content: formBody,
-                    closeLabel: 'KAPAT',
-                    confirmLabel: 'ONAYLA'
-                })
-            }
-        })
+function editUserEvent(e) {
+    var userId = $(e.target).attr("data-user-id")
+    $.ajax({
+        type: "GET",
+        url: "/admin/Users/"+userId,
+        headers: {"X-CSRF-TOKEN": $("input[name='_csrf']").val()},
+        contentType: "application/json",
+        success: function (user) {
+            var formBody =`
+            <div class="container">
+                <div class="form-group">
+                    <div id="updateUserWarn"></div>
+                    <input type="hidden" id="editUserId" value="${user.id}">
+                    <label>Kullanıcı Adı</label>
+                    <input type="text" class="form-control" id="editUsername" value="${user.username}"/>
+                    <label>Parola</label>
+                    <input type="text" class="form-control" id="editPassword" placeholder="Güncellemek istiyorsanız doldurun"/>
+                    <label>Rol</label>
+                    <select id="editRole" class="form-control">`
+                if(user.role == 'USER')
+                    formBody += `<option value="USER" selected>USER</option>`
+                else
+                    formBody += `<option value="USER">USER</option>`
+                if(user.role == 'ADMIN')
+                    formBody += `<option value="ADMIN" selected>ADMIN</option>`
+                else
+                    formBody += `<option value="ADMIN">ADMIN</option>`
+            formBody +=`</select>
+                </div>
+            <div>
+            `
+            dkPopupElEditUser = dkPopup({
+                title: 'Kullanıcı Düzenle',
+                type: 'confirm',
+                confirmClick: function () {
+                    editUser(e)
+                },
+                content: formBody,
+                closeLabel: 'KAPAT',
+                confirmLabel: 'ONAYLA'
+            })
+        }
     })
 }
 function editUser(e) {
     var userId = $('#editUserId').val()
+    var username = $('#editUsername').val()
     var password = $('#editPassword').val()
     var role = $('#editRole').val()
 
+    showLoading($(".dk-popup"))
+    var confirmBtn = $(".dk-popup a.pop-btn.primary")
+    confirmBtn.attr('disabled', 'disabled').addClass('disabled')
     $.ajax({
         type: "PUT",
         url: "/admin/Users",
@@ -232,15 +244,36 @@ function editUser(e) {
         contentType: "application/json",
         data: JSON.stringify({
             id: userId,
+            username: username,
             password: password,
             role: role
         }),
-        success: function (user) {
-            var thEl = $(e.target).parent().parent()
-            thEl.find('.user-password').html(user.password)
-            thEl.find('.user-role').html(user.role)
-            dkPopupElEditUser.closeDkPop()
+        success: function (response) {
+            console.log(response)
+            if (response.result){
+                var user = response.user
+                var thEl = $(e.target).parent().parent()
+                thEl.find('.user-username').html(user.username)
+                thEl.find('.user-password').html(user.password)
+                thEl.find('.user-role').html(user.role)
+                updateUserWarn("Kullanıcı başarıyla güncellendi.", "success")
+                setTimeout(dkPopupElEditUser.closeDkPop, 2000)
+            }
+            else if(response.usernameUsed){
+                updateUserWarn("Kullanıcı adı daha önce kullanılmış!", "danger")
+            }
+            else if(response.notUserIdValid){
+                updateUserWarn("Kullanıcı bulunamadı!", "danger")
+            }else{
+                updateUserWarn("Beklenmedik bir hata oluştu!", "danger")
+            }
+            removeLoading()
+            confirmBtn.removeAttr('disabled').removeClass('disabled')
         }
     })
+}
+function updateUserWarn(str, type) {
+    var body =`<div class="alert alert-${type}" role="alert">${str}</div>`
+    $('#updateUserWarn').html(body)
 }
 /* EDIT USER END*/

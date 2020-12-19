@@ -1,9 +1,9 @@
 package com.doguskar.todo.controller;
 
 import com.doguskar.todo.dto.AdminInsertUserResponseDto;
+import com.doguskar.todo.dto.AdminUpdateUserResponseDto;
 import com.doguskar.todo.dto.TodoItemDto;
 import com.doguskar.todo.dto.UserDto;
-import com.doguskar.todo.entity.User;
 import com.doguskar.todo.service.TodoItemService;
 import com.doguskar.todo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +43,8 @@ public class AdminController {
     }
     @RequestMapping(value = "Users", method = RequestMethod.PUT)
     @ResponseBody
-    public UserDto UpdateUsers(@RequestBody UserDto dto){
-        return userService.update(dto);
+    public AdminUpdateUserResponseDto UpdateUsers(@RequestBody UserDto dto){
+        return userService.updateAll(dto);
     }
     @RequestMapping(value = "Users/{id}", method = RequestMethod.DELETE)
     @ResponseBody
@@ -53,7 +53,7 @@ public class AdminController {
     }
     @RequestMapping(path = "/Users", method = RequestMethod.POST)
     @ResponseBody
-    public AdminInsertUserResponseDto insertUser(@RequestBody UserDto dto){
+    public AdminInsertUserResponseDto InsertUser(@RequestBody UserDto dto){
         return userService.insertUser(dto);
     }
 }

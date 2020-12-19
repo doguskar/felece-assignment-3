@@ -1,6 +1,7 @@
 package com.doguskar.todo.service;
 
 import com.doguskar.todo.dto.AdminInsertUserResponseDto;
+import com.doguskar.todo.dto.AdminUpdateUserResponseDto;
 import com.doguskar.todo.dto.SignUpResponseDto;
 import com.doguskar.todo.dto.UserDto;
 import com.doguskar.todo.auth.AppUserRole;
@@ -144,25 +145,43 @@ public class UserService implements UserDetailsService {
         }
         return responseDto;
     }
-    public UserDto update(UserDto dto){
+    public AdminUpdateUserResponseDto updateAll(UserDto dto){
+        AdminUpdateUserResponseDto responseDto = new AdminUpdateUserResponseDto();
         if (dto.getId() == null){
-            return null;
+            return responseDto;
         }
-        User user = repository.findById(dto.getId()).get();
+        Optional<User> userOpt = repository.findById(dto.getId());
+        if (!userOpt.isPresent()){
+            responseDto.setNotUserIdValid(true);
+            return responseDto;
+        }
+        User user = userOpt.get();
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()){
             user.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
-        AppUserRole role = AppUserRole.USER;
-        if (dto.getRole() != null && dto.getRole().equals("ADMIN"))
-            role = AppUserRole.ADMIN;
+        Optional<User> usernameContol = repository.findByUsername(dto.getUsername());
+        if(usernameContol.isPresent() && user.getId() != usernameContol.get().getId()){
+            responseDto.setUsernameUsed(true);
+            return responseDto;
+        }
+        user.setUsername(dto.getUsername());
+        AppUserRole role;
+        switch (dto.getRole()){
+            case "USER": role = AppUserRole.USER; break;
+            case "ADMIN": role = AppUserRole.ADMIN; break;
+            default: role = AppUserRole.USER;
+        }
         user.setAppUserRole(role);
         User updatedUser = repository.save(user);
-        return new UserDto(
+        UserDto userDto = new UserDto(
                 updatedUser.getId(),
                 updatedUser.getUsername(),
                 updatedUser.getPassword(),
                 updatedUser.getAppUserRole().name()
         );
+        responseDto.setUser(userDto);
+        responseDto.setResult(true);
+        return responseDto;
     }
 
     public void delete(Long id){
