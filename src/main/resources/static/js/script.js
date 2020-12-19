@@ -298,7 +298,13 @@ $('#filterBtn').click(()=>{
 /*FILTER END*/
 
 /* EXTRAS */
-
+function showLoading(e) {
+    body = `<div class="cover-content" id="loadingScreen"><div class="out-of-middle"><div class="middle"><div style="text-align:center"><div class="lds-ripple"><div></div><div></div></div></div></div></div></div>`
+    e.append(body)
+}
+function removeLoading() {
+    $('#loadingScreen').remove()
+}
 function getDateStr(millisecond){
     var date = new Date(millisecond)
     var dateStr =

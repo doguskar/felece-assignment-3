@@ -70,9 +70,10 @@ function addUserPopup() {
     var formBody = `
     <div class="container">
         <div class="form-group">
-            <label>Username</label>
+            <div id="register-warn"></div>
+            <label>Kullanıcı Adı</label>
             <input type="text" id="usernameInput" class="form-control"/>
-            <label>Password</label>
+            <label>Parola</label>
             <input type="password" id="passwordInput" class="form-control"/>
             <label>Role</label>
             <select id="roleSelect" class="form-control">
@@ -93,6 +94,9 @@ function addUserPopup() {
     })
 }
 function submitAddUserForm() {
+    showLoading($(".dk-popup"))
+    var confirmBtn = $(".dk-popup a.pop-btn.primary")
+    confirmBtn.attr('disabled', 'disabled').addClass('disabled')
     $.ajax({
         type: "POST",
         url: "/admin/Users",
@@ -103,15 +107,38 @@ function submitAddUserForm() {
             password: $('#passwordInput').val(),
             role: $('#roleSelect').val()
         }),
-        success: function (user) {
-            if(user){
-                $('#userTable tbody').append(getUserBody(user))
-                dkPopupElAddUser.closeDkPop()
-            }else{
-                alert("User cannot be inserted! Username could has been used.")
+        success: function (response) {
+            console.log(response)
+            if (response.signUpResponse.result){
+                var user = response.user;
+                if(user){
+                    $('#userTable tbody').append(getUserBody(user))
+                    insertUserWarn("Kullanıcı başarıyla eklendi.", "success")
+                    setTimeout(dkPopupElAddUser.closeDkPop, 2000)
+                }else{
+                    insertUserWarn("Beklenmedik bir hata oluştu!", "danger")
+                }
             }
+            else if(response.signUpResponse.usernameUsed){
+                insertUserWarn("Kullanıcı adı daha önce kullanılmış!", "danger")
+            }
+            else if(response.signUpResponse.notUsernameValid){
+                insertUserWarn("Kullanıcı adı uygun değil!", "danger")
+            }
+            else if(response.signUpResponse.notPasswordValid){
+                insertUserWarn("Parola uygun değil!", "danger")
+            }else{
+                insertUserWarn("Beklenmedik bir hata oluştu!", "danger")
+            }
+
+            removeLoading()
+            confirmBtn.removeAttr('disabled').removeClass('disabled')
         }
     })
+}
+function insertUserWarn(str, type) {
+    var body =`<div class="alert alert-${type}" role="alert">${str}</div>`
+    $('#register-warn').html(body)
 }
 /* Add User END*/
 /* DELETE USER */

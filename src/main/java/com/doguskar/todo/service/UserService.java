@@ -1,5 +1,6 @@
 package com.doguskar.todo.service;
 
+import com.doguskar.todo.dto.AdminInsertUserResponseDto;
 import com.doguskar.todo.dto.SignUpResponseDto;
 import com.doguskar.todo.dto.UserDto;
 import com.doguskar.todo.auth.AppUserRole;
@@ -55,29 +56,61 @@ public class UserService implements UserDetailsService {
     public Optional<User> findByUsername(String username){
         return repository.findByUsername(username);
     }
-    public UserDto save(UserDto dto){
-        if (dto.getUsername() == null && dto.getPassword() == null){
-            return null;
+    public AdminInsertUserResponseDto insertUser(UserDto dto){
+        /*Validations*/
+        SignUpResponseDto responseDto = new SignUpResponseDto();
+        String username = dto.getUsername();
+        String password = dto.getPassword();
+        if (username == null || username.length() < 3){
+            responseDto.setNotUsernameValid(true);
+            return new AdminInsertUserResponseDto(
+                    responseDto,
+                    null
+            );
         }
-        Optional<User> usernameControl = repository.findByUsername(dto.getUsername());
-        if (usernameControl.isPresent()){
-            return null;
+        if (password == null || password.length() < 6){
+            responseDto.setNotPasswordValid(true);
+            return new AdminInsertUserResponseDto(
+                    responseDto,
+                    null
+            );
         }
-        AppUserRole role = AppUserRole.USER;
-        if (dto.getRole() != null && dto.getRole().equals("ADMIN"))
-            role = AppUserRole.ADMIN;
-        User user = new User(
+        Optional<User> user = repository.findByUsername(username);
+        if(user.isPresent()){
+            responseDto.setUsernameUsed(true);
+            return new AdminInsertUserResponseDto(
+                    responseDto,
+                    null
+            );
+        }
+        /*Save User*/
+        AppUserRole role;
+        switch (dto.getRole()){
+            case "USER": role = AppUserRole.USER; break;
+            case "ADMIN": role = AppUserRole.ADMIN; break;
+            default: role = AppUserRole.USER;
+        }
+        User registeredUser = repository.save(new User(
                 dto.getUsername(),
                 passwordEncoder.encode(dto.getPassword()),
                 role,
                 true,true,true,true
-        );
-        User createdUser = repository.save(user);
-        return new UserDto(
-                createdUser.getId(),
-                createdUser.getUsername(),
-                createdUser.getPassword(),
-                createdUser.getAppUserRole().name()
+        ));
+        if (registeredUser != null){
+            responseDto.setResult(true);
+            return new AdminInsertUserResponseDto(
+                    responseDto,
+                    new UserDto(
+                            registeredUser.getId(),
+                            registeredUser.getUsername(),
+                            registeredUser.getPassword(),
+                            registeredUser.getAppUserRole().name()
+                    )
+            );
+        }
+        return new AdminInsertUserResponseDto(
+                responseDto,
+                null
         );
     }
     public SignUpResponseDto register(UserDto dto){

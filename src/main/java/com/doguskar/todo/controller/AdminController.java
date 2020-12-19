@@ -1,5 +1,6 @@
 package com.doguskar.todo.controller;
 
+import com.doguskar.todo.dto.AdminInsertUserResponseDto;
 import com.doguskar.todo.dto.TodoItemDto;
 import com.doguskar.todo.dto.UserDto;
 import com.doguskar.todo.entity.User;
@@ -52,7 +53,7 @@ public class AdminController {
     }
     @RequestMapping(path = "/Users", method = RequestMethod.POST)
     @ResponseBody
-    public UserDto saveUser(@RequestBody UserDto dto){
-        return userService.save(dto);
+    public AdminInsertUserResponseDto insertUser(@RequestBody UserDto dto){
+        return userService.insertUser(dto);
     }
 }
