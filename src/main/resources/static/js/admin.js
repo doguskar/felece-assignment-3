@@ -198,7 +198,7 @@ function editUserEvent(e) {
                     <label>Kullanıcı Adı</label>
                     <input type="text" class="form-control" id="editUsername" value="${user.username}"/>
                     <label>Parola</label>
-                    <input type="text" class="form-control" id="editPassword" placeholder="Güncellemek istiyorsanız doldurun"/>
+                    <input type="password" class="form-control" id="editPassword" placeholder="Güncellemek istiyorsanız doldurun"/>
                     <label>Rol</label>
                     <select id="editRole" class="form-control">`
                 if(user.role == 'USER')

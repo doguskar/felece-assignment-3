@@ -340,3 +340,6 @@ body.dark-theme .form-signin input {
   padding-left: 10px;
 }
 /* checkbox end */
+.dk-popup label{
+  color: #000;
+}
